@@ -8,7 +8,8 @@ import com.hcl.product.service.ManufacturerService;
 import com.hcl.product.service.ProductCategoryService;
 import com.hcl.product.service.ProductService;
 import com.hcl.product.service.SellerService;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @Service
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(ProductCategoryServiceImpl.class);
+    private Logger logger = LogManager.getLogger(ProductCategoryServiceImpl.class);
 
     @Autowired
     ProductCategoryRepository  productCategoryRepository;
@@ -65,7 +66,16 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Override
     public ProductCategory updateProductCategory( ProductCategory  productCategory){
-        return  productCategoryRepository.save(productCategory);
+        ProductCategory response = null;
+        if(productCategory!=null && productCategory.getProductCategoryId()>0){
+            Optional<ProductCategory> productCategory1 = productCategoryRepository.findById(productCategory.getProductCategoryId());
+
+            if(productCategory1.isPresent()){
+                response = productCategoryRepository.save(productCategory);
+            }
+        }
+        return response;
+
     }
 
 

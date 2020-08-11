@@ -6,7 +6,8 @@ import com.hcl.product.model.Manufacturer;
 import com.hcl.product.model.Product;
 import com.hcl.product.service.ProductService;
 import com.hcl.product.service.SearchService;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.List;
 @Service
 public class SearchServiceImpl implements SearchService {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(SearchServiceImpl.class);
+    private Logger logger = LogManager.getLogger(SearchServiceImpl.class);
 
     @Autowired
     private ProductRepository productRepository;

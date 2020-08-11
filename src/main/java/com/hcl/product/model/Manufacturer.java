@@ -1,8 +1,14 @@
 package com.hcl.product.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,9 +20,10 @@ public class Manufacturer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      private int manufacturerId;
      private String manufacturerRegion;
-     private String country;
+     private String manufacturerCountry;
      private int productCount;
-    private Date manufacturingDate;
+
+    private LocalDate manufacturingDate;
 
     @JsonIgnore
     @ManyToOne
@@ -31,12 +38,12 @@ public class Manufacturer {
         this.manufacturerRegion = manufacturerRegion;
     }
 
-    public String getCountry() {
-        return country;
+    public String getManufacturerCountry() {
+        return manufacturerCountry;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setManufacturerCountry(String manufacturerCountry) {
+        this.manufacturerCountry = manufacturerCountry;
     }
 
     public int getProductCount() {
@@ -63,14 +70,14 @@ public class Manufacturer {
         this.product = product;
     }
 
-    public Date getManufacturingDate() {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    public LocalDate getManufacturingDate() {
         return manufacturingDate;
     }
-
-    public void setManufacturingDate(Date manufacturingDate) {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    public void setManufacturingDate(LocalDate manufacturingDate) {
         this.manufacturingDate = manufacturingDate;
     }
-
-
-
 }

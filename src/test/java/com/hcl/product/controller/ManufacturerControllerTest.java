@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -99,7 +100,7 @@ public class ManufacturerControllerTest {
             Assert.assertNotNull(manufacturer1);
 
             Assert.assertNotNull(manufacturer1);
-            Assert.assertEquals(manufacturer1.getCountry(), manufacturer.getCountry());
+            Assert.assertEquals(manufacturer1.getManufacturerCountry(), manufacturer.getManufacturerCountry());
             Assert.assertEquals(manufacturer1.getProductCount(), manufacturer.getProductCount());
             Assert.assertEquals(manufacturer1.getManufacturerRegion(), manufacturer.getManufacturerRegion());
     }
@@ -128,7 +129,7 @@ public class ManufacturerControllerTest {
         Assert.assertNotNull(manufacturer1);
 
         Assert.assertNotNull(manufacturer1);
-        Assert.assertEquals(manufacturer1.getCountry(), manufacturer.getCountry());
+        Assert.assertEquals(manufacturer1.getManufacturerCountry(), manufacturer.getManufacturerCountry());
         Assert.assertEquals(manufacturer1.getProductCount(), manufacturer.getProductCount());
         Assert.assertEquals(manufacturer1.getManufacturerRegion(), manufacturer.getManufacturerRegion());
     }
@@ -179,7 +180,7 @@ public class ManufacturerControllerTest {
         Assert.assertNotNull(manufacturer1);
 
         Assert.assertNotNull(manufacturer1);
-        Assert.assertEquals(manufacturer1.getCountry(), manufacturer.getCountry());
+        Assert.assertEquals(manufacturer1.getManufacturerCountry(), manufacturer.getManufacturerCountry());
         Assert.assertEquals(manufacturer1.getProductCount(), manufacturer.getProductCount());
         Assert.assertEquals(manufacturer1.getManufacturerRegion(), manufacturer.getManufacturerRegion());
     }
@@ -206,7 +207,33 @@ public class ManufacturerControllerTest {
         Assert.assertNotNull(manufacturers);
         Manufacturer manufacturer1 = manufacturers[0];
         Assert.assertNotNull(manufacturer1);
-        Assert.assertEquals(manufacturer1.getCountry(), manufacturer.getCountry());
+        Assert.assertEquals(manufacturer1.getManufacturerCountry(), manufacturer.getManufacturerCountry());
+        Assert.assertEquals(manufacturer1.getProductCount(), manufacturer.getProductCount());
+        Assert.assertEquals(manufacturer1.getManufacturerRegion(), manufacturer.getManufacturerRegion());
+    }
+    @Test
+    public void getManufacturerByManufactureRegionAndDateTest() throws Exception {
+        String uri = "/manufacturers/Hyd/"+LocalDate.now().toString();
+        Manufacturer manufacturer = getManufacturer();
+        Product product = getProduct();
+        Mockito.when(manufacturerRepository.findByManufacturerRegionAndManufacturingDate(Mockito.anyString(), Mockito.any(LocalDate.class))).thenReturn(Arrays.asList(manufacturer));
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        Assert.assertEquals(200, status);
+        String content = mvcResult.getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Assert.assertNotNull(content);
+        Manufacturer[] manufacturers =  mapFromJson(content, Manufacturer[].class);
+
+        Mockito.verify(manufacturerRepository, Mockito.times(1)).findByManufacturerRegionAndManufacturingDate(Mockito.anyString(), Mockito.any(LocalDate.class));
+        Assert.assertNotNull(manufacturers);
+        Manufacturer manufacturer1 = manufacturers[0];
+        Assert.assertNotNull(manufacturer1);
+        Assert.assertEquals(manufacturer1.getManufacturerCountry(), manufacturer.getManufacturerCountry());
         Assert.assertEquals(manufacturer1.getProductCount(), manufacturer.getProductCount());
         Assert.assertEquals(manufacturer1.getManufacturerRegion(), manufacturer.getManufacturerRegion());
     }
@@ -215,9 +242,9 @@ public class ManufacturerControllerTest {
     private Manufacturer getManufacturer(){
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setManufacturerId(1);
-        manufacturer.setCountry("India");
+        manufacturer.setManufacturerCountry("India");
         manufacturer.setManufacturerRegion("Hyderabad");
-        manufacturer.setManufacturingDate(new Date());
+        manufacturer.setManufacturingDate(LocalDate.now());
         manufacturer.setProductCount(10);
         Product product = getProduct();
         product.setManufacturers(Arrays.asList(manufacturer));

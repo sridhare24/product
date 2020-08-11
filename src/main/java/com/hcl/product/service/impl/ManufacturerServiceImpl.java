@@ -5,18 +5,23 @@ import com.hcl.product.controller.SellerController;
 import com.hcl.product.model.Manufacturer;
 
 import com.hcl.product.service.ManufacturerService;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(ManufacturerServiceImpl.class);
+    private Logger logger = LogManager.getLogger(ManufacturerServiceImpl.class);
 
     @Autowired
     ManufacturerRepository  manufacturerRepository  ;
@@ -55,6 +60,19 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 
     public List<Manufacturer> getManufacturerByProductId(Integer productId){
       return   manufacturerRepository.findByProductProductId(productId);
+    }
+
+    @Override
+    public List<Manufacturer> getManufacturerByManufactureRegionAndDate(String manufactureRegion, LocalDate manufactureDate) {
+
+        try{
+            return   manufacturerRepository.findByManufacturerRegionAndManufacturingDate(manufactureRegion, manufactureDate);
+        }catch (Exception exception){
+            logger.error("Invalid date Format");
+            return null;
+        }
+
+
     }
 
 }

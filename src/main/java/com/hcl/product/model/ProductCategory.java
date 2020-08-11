@@ -10,7 +10,7 @@ import java.util.List;
 public class ProductCategory {
 
  @Id
- //@GeneratedValue(strategy = GenerationType.IDENTITY)
+ @GeneratedValue(strategy = GenerationType.IDENTITY)
  private int productCategoryId;
     private  String productCategoryName;
     private String productCategoryDescription;

@@ -2,7 +2,8 @@ package com.hcl.product.controller;
 
 import com.hcl.product.model.Product;
 import com.hcl.product.service.SearchService;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import java.util.List;
 @RequestMapping("/search")
 public class SearchController {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(SearchController.class);
+    private Logger logger = LogManager.getLogger(SearchController.class);
 
     @Autowired
     SearchService searchService;
@@ -31,7 +32,8 @@ public class SearchController {
                     .body( existingProducts);
         }
         else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.error("No Product Found with Product Name "+productName);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ArrayList<Product>());
         }
 
@@ -45,7 +47,8 @@ public class SearchController {
                     .body( products);
         }
         else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.error("No Product Found with specified Manufacturer Region "+manufacturerRegion);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ArrayList<Product>());
         }
 

@@ -4,7 +4,8 @@ package com.hcl.product.service.impl;
 import com.hcl.product.Repository.SellerRepository;
 import com.hcl.product.model.Seller;
 import com.hcl.product.service.SellerService;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Service
 public class SellerServiceImpl implements SellerService {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(SellerServiceImpl.class);
+    private Logger logger = LogManager.getLogger(SellerServiceImpl.class);
 
     @Autowired
     SellerRepository sellerRepository ;

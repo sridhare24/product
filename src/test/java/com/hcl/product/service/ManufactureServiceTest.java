@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +46,7 @@ public class ManufactureServiceTest {
         Manufacturer response = manufacturerService.createManufacturer(manufacturer);
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(response.getCountry(), manufacturer.getCountry());
+        Assert.assertEquals(response.getManufacturerCountry(), manufacturer.getManufacturerCountry());
         Assert.assertEquals(response.getManufacturerRegion(), manufacturer.getManufacturerRegion());
         Assert.assertEquals(response.getProductCount(), manufacturer.getProductCount());
     }
@@ -65,7 +66,7 @@ public class ManufactureServiceTest {
         Manufacturer manufacturer1 = manufacturerService.updateManufacturer(response);
 
         Assert.assertNotNull(manufacturer1);
-        Assert.assertEquals(manufacturer1.getCountry(), response.getCountry());
+        Assert.assertEquals(manufacturer1.getManufacturerCountry(), response.getManufacturerCountry());
         Assert.assertEquals(manufacturer1.getManufacturerRegion(), response.getManufacturerRegion());
         Assert.assertEquals(manufacturer1.getProductCount(), response.getProductCount());
 
@@ -92,7 +93,7 @@ public class ManufactureServiceTest {
         Manufacturer manufacturer1 = manufacturerService.getManufacturerById(1);
 
         Assert.assertNotNull(manufacturer1);
-        Assert.assertEquals(manufacturer1.getCountry(), manufacturer.getCountry());
+        Assert.assertEquals(manufacturer1.getManufacturerCountry(), manufacturer.getManufacturerCountry());
         Assert.assertEquals(manufacturer1.getManufacturerRegion(), manufacturer.getManufacturerRegion());
         Assert.assertEquals(manufacturer1.getProductCount(), manufacturer.getProductCount());
 
@@ -108,7 +109,7 @@ public class ManufactureServiceTest {
         List<Manufacturer> manufacturer1 = manufacturerService.getAllManufacturers();
 
         Assert.assertNotNull(manufacturer1);
-        Assert.assertEquals(manufacturer1.get(0).getCountry(), manufacturer.getCountry());
+        Assert.assertEquals(manufacturer1.get(0).getManufacturerCountry(), manufacturer.getManufacturerCountry());
         Assert.assertEquals(manufacturer1.get(0).getManufacturerRegion(), manufacturer.getManufacturerRegion());
         Assert.assertEquals(manufacturer1.get(0).getProductCount(), manufacturer.getProductCount());
     }
@@ -116,9 +117,9 @@ public class ManufactureServiceTest {
     private Manufacturer getManufacturer(){
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setManufacturerId(1);
-        manufacturer.setCountry("India");
+        manufacturer.setManufacturerCountry("India");
         manufacturer.setManufacturerRegion("Hyderabad");
-        manufacturer.setManufacturingDate(new Date());
+        manufacturer.setManufacturingDate(LocalDate.now());
         manufacturer.setProductCount(10);
         return manufacturer;
     }

@@ -4,7 +4,8 @@ import java.util.Optional;
 import com.hcl.product.Repository.ProductRepository;
 import com.hcl.product.model.Product;
 import com.hcl.product.service.ProductService;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(ProductServiceImpl.class);
+    private Logger logger = LogManager.getLogger(ProductServiceImpl.class);
 
     @Autowired
     ProductRepository productRepository ;

@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -71,7 +72,7 @@ public class SearchServiceTest {
 
         List<Manufacturer> manufacturers = searchService.getManufacturerByRegion("Hyd");
         Assert.assertNotNull(manufacturers);
-        Assert.assertEquals(manufacturers.get(0).getCountry(), manufacturer.getCountry());
+        Assert.assertEquals(manufacturers.get(0).getManufacturerCountry(), manufacturer.getManufacturerCountry());
         Assert.assertEquals(manufacturers.get(0).getManufacturerRegion(), manufacturer.getManufacturerRegion());
         Assert.assertEquals(manufacturers.get(0).getProductCount(), manufacturer.getProductCount());
 
@@ -91,9 +92,9 @@ public class SearchServiceTest {
     private Manufacturer getManufacturer(){
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setManufacturerId(1);
-        manufacturer.setCountry("India");
+        manufacturer.setManufacturerCountry("India");
         manufacturer.setManufacturerRegion("Hyderabad");
-        manufacturer.setManufacturingDate(new Date());
+        manufacturer.setManufacturingDate(LocalDate.now());
         manufacturer.setProductCount(10);
         manufacturer.setProduct(getProduct());
         return manufacturer;

@@ -5,7 +5,8 @@ import com.hcl.product.model.ProductCategory;
 import com.hcl.product.service.impl.ManufacturerServiceImpl;
 import com.hcl.product.service.impl.ProductCategoryServiceImpl;
 import com.hcl.product.service.impl.ProductServiceImpl;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(ProductController.class);
+    private Logger logger = LogManager.getLogger(ProductController.class);
 
     @Autowired
     ProductServiceImpl productService;
@@ -38,7 +39,8 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(existingProducts);
         } else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.warn("NO Product details Found");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
                     .body(new ArrayList<Product>());
         }
     }
@@ -52,7 +54,8 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(product);
         } else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.warn("NO Product details Found "+ productId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
                     .body(null);
         }
     }
@@ -68,7 +71,8 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(createdProduct);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            logger.warn("Unable to add Product");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
     }
@@ -83,7 +87,8 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(updatedProduct);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            logger.warn("Unable to update Product");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
     }
@@ -91,15 +96,30 @@ public class ProductController {
 
     @DeleteMapping
     public ResponseEntity<String> deleteProduct(@RequestBody Product product) {
-
-         productService.deleteProduct( product);
+        try {
+            productService.deleteProduct( product);
             return ResponseEntity.status(HttpStatus.OK)
                     .body("Product deleted successfully");
+        }catch (Exception exception){
+            logger.error("Unable to Delete the Product" +exception.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Unable to Delete the Product");
+        }
+
+
     }
 
     @GetMapping("/productCategories/{productCategoryId}")
-    public List<Product> getAllProductByProductCategoryId(@PathVariable (value = "productCategoryId") int productCategoryId) {
-        return productService.getProductByProductCategoryId(productCategoryId);
+    public  ResponseEntity<List<Product>> getAllProductByProductCategoryId(@PathVariable (value = "productCategoryId") int productCategoryId) {
+        List<Product> products = productService.getProductByProductCategoryId(productCategoryId);
+        if(products != null && products.size() >0){
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(products);
+        } else {
+            logger.warn("NO Product details Found");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                    .body(new ArrayList<Product>());
+        }
     }
 
     @PostMapping("/productCategories/{productCategoryId}")

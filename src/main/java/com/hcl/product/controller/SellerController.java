@@ -4,7 +4,8 @@ import com.hcl.product.model.Product;
 import com.hcl.product.model.Seller;
 import com.hcl.product.service.ProductService;
 import com.hcl.product.service.SellerService;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import java.util.List;
 @RequestMapping("/sellers")
 public class SellerController {
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(SellerController.class);
+    private Logger logger = LogManager.getLogger(SellerController.class);
 
     @Autowired
     SellerService sellerService;
@@ -41,7 +42,8 @@ public class SellerController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(sellers);
         } else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.warn(" No Sellers Found");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
                     .body(new ArrayList<Seller>());
         }
     }
@@ -53,7 +55,8 @@ public class SellerController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(sellers);
         } else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.warn(" No Sellers Found");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
                     .body(new ArrayList<Seller>());
         }
     }
@@ -67,7 +70,8 @@ public class SellerController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(seller);
         } else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.warn(" No Sellers Found");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
                     .body(null);
         }
     }
@@ -82,7 +86,8 @@ public class SellerController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(newSeller );
         } else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.warn(" Unable to add Seller");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
     }
@@ -103,7 +108,8 @@ public class SellerController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(newSeller );
         } else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.warn(" Unable to add Seller");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
     }
@@ -118,7 +124,8 @@ public class SellerController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(updatedSeller);
         } else {
-            return ResponseEntity.status(HttpStatus.OK)
+            logger.warn(" Unable to update Seller");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
     }
@@ -127,9 +134,16 @@ public class SellerController {
     @DeleteMapping
     public ResponseEntity<String> deleteSeller(@RequestBody Seller seller) {
 
-        sellerService.deleteSeller(seller);
+        try{
+            sellerService.deleteSeller(seller);
             return ResponseEntity.status(HttpStatus.OK)
                     .body("Seller  deleted successfully");
+        }catch (Exception exception){
+            logger.error("Unable to Process the request "+exception.getMessage());
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Unable to Process the request ");
         }
 
     }
+
+}

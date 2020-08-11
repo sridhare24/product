@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -146,9 +147,9 @@ public class SearchControllerTest {
     private Manufacturer getManufacturer(){
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setManufacturerId(1);
-        manufacturer.setCountry("India");
+        manufacturer.setManufacturerCountry("India");
         manufacturer.setManufacturerRegion("Hyderabad");
-        manufacturer.setManufacturingDate(new Date());
+        manufacturer.setManufacturingDate(LocalDate.now());
         manufacturer.setProductCount(10);
         Product product = getProduct();
         product.setManufacturers(Arrays.asList(manufacturer));
